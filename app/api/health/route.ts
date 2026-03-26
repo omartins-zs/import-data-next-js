@@ -30,17 +30,9 @@ export async function GET() {
       status.redis = 'ONLINE';
     }
     
-    // Check Worker
-    // Note: BullMQ stores keys like 'bull:import-data-queue:meta'
-    // but the most reliable way to check if a worker is alive is looking for active consumers.
-    // For now, we'll check if the queue's meta key exists, which implies the queue is initialized.
-    const queueName = process.env.IMPORT_QUEUE_NAME || 'import-data-queue';
-    const hasQueue = await redis.exists(`bull:${queueName}:meta`);
-    
-    // Since we can't easily query active workers via raw Redis without more complex logic,
-    // we'll mark it as ONLINE if Redis is healthy and the queue exists.
-    // The user will know if it's truly working by seeing the progress of imports.
-    status.worker = hasQueue ? 'ONLINE' : 'OFFLINE';
+    // Check Worker via Heartbeat Key (set by the worker itself every 5s)
+    const heartbeat = await redis.get('worker:import:heartbeat');
+    status.worker = heartbeat === 'online' ? 'ONLINE' : 'OFFLINE';
 
     redis.disconnect();
   } catch (e) {
