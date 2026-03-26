@@ -3,7 +3,7 @@ import { importacaoService } from '@/modules/importacao/importacao.service';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import csv from 'fast-csv';
+import * as csv from 'fast-csv';
 import ExcelJS from 'exceljs';
 
 export async function GET() {
