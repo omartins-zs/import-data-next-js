@@ -30,16 +30,36 @@ export default function ImportacoesPage() {
 
   useEffect(() => {
     fetchImports();
-    const interval = setInterval(fetchImports, 5000); // Poll every 5s
+    const interval = setInterval(fetchImports, 3000); // Poll every 3s
     return () => clearInterval(interval);
   }, []);
 
-  const getStatusIcon = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'CONCLUIDO': return <CheckCircle2 className="text-green-500" size={18} />;
-      case 'ERRO': return <XCircle className="text-red-500" size={18} />;
-      case 'PROCESSANDO': return <Clock className="text-blue-500 animate-pulse" size={18} />;
-      default: return <AlertCircle className="text-amber-500" size={18} />;
+      case 'SUCESSO': 
+        return <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800/50">
+          <CheckCircle2 size={12} /> SUCESSO
+        </span>;
+      case 'FALHA': 
+        return <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
+          <AlertCircle size={12} /> FALHA
+        </span>;
+      case 'ERRO': 
+        return <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800/50">
+          <XCircle size={12} /> ERRO
+        </span>;
+      case 'SUCESSO_PARCIAL': 
+        return <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50">
+          <History size={12} /> SUCESSO PARCIAL
+        </span>;
+      case 'PROCESSANDO': 
+        return <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50 animate-pulse">
+          <Clock size={12} className="animate-spin" /> PROCESSANDO
+        </span>;
+      default: 
+        return <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700/50">
+          {status}
+        </span>;
     }
   };
 
@@ -81,11 +101,8 @@ export default function ImportacoesPage() {
                       <span className="font-medium text-foreground">{imp.nome_arquivo}</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        {getStatusIcon(imp.status)}
-                        <span className="text-[10px] font-bold uppercase tracking-wide">
-                          {imp.status.replace('_', ' ')}
-                        </span>
+                      <div className="flex items-center justify-center">
+                        {getStatusBadge(imp.status)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
