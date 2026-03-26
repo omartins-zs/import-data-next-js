@@ -12,9 +12,12 @@ import {
   AlertTriangle, 
   ListRestart, 
   ShieldAlert, 
-  Database 
+  Database,
+  History,
+  AlertCircle
 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 export default function ImportacaoDetalhePage() {
   const { id } = useParams();
@@ -39,6 +42,92 @@ export default function ImportacaoDetalhePage() {
     const interval = setInterval(fetchImport, 3000);
     return () => clearInterval(interval);
   }, [id]);
+
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  const handleRetry = async () => {
+    const result = await Swal.fire({
+      title: 'Reprocessar arquivo?',
+      text: "O sistema tentará processar os registros novamente.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3b82f6',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Sim, reprocessar!',
+      cancelButtonText: 'Cancelar',
+      background: document.documentElement.classList.contains('dark') ? '#18181b' : '#ffffff',
+      color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+    });
+
+    if (!result.isConfirmed) return;
+
+    setIsRetrying(true);
+    try {
+      const res = await fetch(`/api/importacoes/${id}/retry`, { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json();
+        Swal.fire({
+          title: 'Erro!',
+          text: err.error,
+          icon: 'error',
+          confirmButtonColor: '#ef4444',
+          background: document.documentElement.classList.contains('dark') ? '#18181b' : '#ffffff',
+          color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+        });
+      } else {
+        Swal.fire({
+          title: 'Sucesso!',
+          text: 'O arquivo foi enviado para reprocessamento.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+          background: document.documentElement.classList.contains('dark') ? '#18181b' : '#ffffff',
+          color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+        });
+        fetchImport(); // Refresh
+      }
+    } catch (e: any) {
+      Swal.fire({
+        title: 'Erro Inesperado',
+        text: e.message,
+        icon: 'error',
+        confirmButtonColor: '#ef4444',
+        background: document.documentElement.classList.contains('dark') ? '#18181b' : '#ffffff',
+        color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+      });
+    } finally {
+      setIsRetrying(false);
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'SUCESSO': 
+        return <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800/50">
+          <CheckCircle2 size={12} /> SUCESSO
+        </span>;
+      case 'FALHA': 
+        return <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
+          <AlertCircle size={12} /> FALHA
+        </span>;
+      case 'ERRO': 
+        return <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800/50">
+          <XCircle size={12} /> ERRO
+        </span>;
+      case 'SUCESSO_PARCIAL': 
+        return <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50">
+          <History size={12} /> SUCESSO PARCIAL
+        </span>;
+      case 'PROCESSANDO': 
+        return <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50 animate-pulse">
+          <Clock size={12} className="animate-spin" /> PROCESSANDO
+        </span>;
+      default: 
+        return <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700/50">
+          {status}
+        </span>;
+    }
+  };
 
   if (loading && !importacao) return <DashboardShell title="Detalhes"><div className="flex h-32 items-center justify-center animate-pulse text-muted-foreground font-medium">Carregando detalhes...</div></DashboardShell>;
   if (!importacao) return <DashboardShell title="Detalhes"><div>Não encontrado. <button onClick={() => router.back()} className="text-primary hover:underline">Voltar</button></div></DashboardShell>;
@@ -68,13 +157,8 @@ export default function ImportacaoDetalhePage() {
                   <p className="text-sm text-muted-foreground">{format(new Date(importacao.criado_em), 'dd/MM/yyyy HH:mm')}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
-                  importacao.status === 'CONCLUIDO' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' : 
-                  importacao.status === 'ERRO' ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400' : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400'
-                }`}>
-                  {importacao.status.replace('_', ' ')}
-                </span>
+              <div>
+                {getStatusBadge(importacao.status)}
               </div>
             </div>
 
@@ -85,7 +169,11 @@ export default function ImportacaoDetalhePage() {
               </div>
               <div className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-3.5 mb-2 overflow-hidden border border-border">
                 <div 
-                  className={`h-full rounded-full transition-all duration-1000 ${importacao.status === 'ERRO' ? 'bg-red-500' : 'bg-primary shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}
+                  className={`h-full rounded-full transition-all duration-1000 ${
+                    importacao.status === 'ERRO' ? 'bg-red-500' : 
+                    importacao.status === 'FALHA' ? 'bg-amber-500' : 
+                    importacao.status === 'SUCESSO_PARCIAL' ? 'bg-blue-500' : 'bg-green-500'
+                  } shadow-[0_0_15px_rgba(59,130,246,0.5)]`}
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
@@ -183,8 +271,12 @@ export default function ImportacaoDetalhePage() {
             <p className="text-xs text-muted-foreground mb-6 leading-relaxed">
               Deseja tentar reprocessar os registros que falharam? O sistema tentará novamente baseando-se nos logs salvos.
             </p>
-            <button className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl font-bold text-sm shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95">
-              Reprocessar Erros
+            <button 
+              onClick={handleRetry}
+              disabled={isRetrying || importacao.status === 'PROCESSANDO'}
+              className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl font-bold text-sm shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isRetrying ? 'Reprocessando...' : 'Reprocessar Erros'}
             </button>
           </div>
         </div>
