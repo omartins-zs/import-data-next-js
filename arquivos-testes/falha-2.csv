@@ -1,3 +1,3 @@
-nome,cpf,email,telefone
-Errado,000,email-invalido,abc
-Invalido,999,teste@,123
+nome,cpf,email,telefone,data_nascimento
+Errado 1,abc,invalid,0,0
+Errado 2,000,fake,1,1
