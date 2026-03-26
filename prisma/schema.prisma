@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Pessoa {
+  id              String   @id @default(uuid())
+  nome            String
+  cpf             String   @unique
+  email           String?
+  telefone        String?
+  data_nascimento DateTime?
+  status          Status   @default(ATIVO)
+  criado_em       DateTime @default(now())
+  atualizado_em   DateTime @updatedAt
+
+  @@map("pessoas")
+}
+
+model Importacao {
+  id              String           @id @default(uuid())
+  nome_arquivo    String
+  status          ImportStatus     @default(PENDENTE)
+  total_registros Int              @default(0)
+  processados     Int              @default(0)
+  erros           Int              @default(0)
+  criado_em       DateTime         @default(now())
+  atualizado_em   DateTime         @updatedAt
+  erros_list      ErroImportacao[]
+  logs            LogImportacao[]
+
+  @@map("importacoes")
+}
+
+model ErroImportacao {
+  id            String     @id @default(uuid())
+  importacao_id String
+  linha         Int
+  dados         Json?
+  mensagem      String
+  campo         String?
+  criado_em     DateTime   @default(now())
+  importacao    Importacao @relation(fields: [importacao_id], references: [id], onDelete: Cascade)
+
+  @@index([importacao_id])
+  @@map("erros_importacao")
+}
+
+model LogImportacao {
+  id            String     @id @default(uuid())
+  importacao_id String
+  mensagem      String
+  nivel         String     // INFO, WARNING, ERROR
+  criado_em     DateTime   @default(now())
+  importacao    Importacao @relation(fields: [importacao_id], references: [id], onDelete: Cascade)
+
+  @@index([importacao_id])
+  @@map("logs_importacao")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  nome          String
+  email         String   @unique
+  senha         String
+  criado_em     DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  @@map("usuarios")
+}
+
+enum Status {
+  ATIVO
+  INATIVO
+}
+
+enum ImportStatus {
+  PENDENTE
+  PROCESSANDO
+  CONCLUIDO
+  ERRO
+  CONCLUIDO_COM_ERROS
+}
