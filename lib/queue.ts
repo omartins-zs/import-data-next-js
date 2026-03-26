@@ -9,7 +9,7 @@ const redisConfig = {
 
 export const redisConnection = new Redis(redisConfig);
 
-export const importQueue = new Queue('import-queue', {
+export const importQueue = new Queue(process.env.IMPORT_QUEUE_NAME || 'import-queue', {
   connection: redisConnection,
   defaultJobOptions: {
     attempts: 3,
