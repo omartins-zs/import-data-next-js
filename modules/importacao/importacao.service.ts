@@ -27,11 +27,12 @@ export class ImportacaoService {
     });
   }
 
-  async create(nomeArquivo: string, totalRegistros: number) {
+  async create(nomeArquivo: string, totalRegistros: number, filePath?: string) {
     const importacao = await prisma.importacao.create({
       data: {
         nome_arquivo: nomeArquivo,
         total_registros: totalRegistros,
+        file_path: filePath,
         status: 'PENDENTE',
       },
     });
@@ -43,7 +44,10 @@ export class ImportacaoService {
   async startProcessing(id: string, filePath: string) {
     await prisma.importacao.update({
       where: { id },
-      data: { status: 'PROCESSANDO' },
+      data: { 
+        status: 'PROCESSANDO',
+        file_path: filePath
+      },
     });
 
     await importQueue.add('process-import', {
@@ -52,6 +56,40 @@ export class ImportacaoService {
     });
 
     await this.addLog(id, 'Enviado para a fila de processamento', 'INFO');
+  }
+
+  async retry(id: string) {
+    console.log(`[RETRY] Solicitação para ID: ${id}`);
+    const importacao = await prisma.importacao.findUnique({
+      where: { id },
+    });
+
+    console.log(`[RETRY] Registro encontrado:`, importacao);
+
+    if (!importacao || !importacao.file_path) {
+      throw new Error('Caminho do arquivo não encontrado para reprocessamento');
+    }
+
+    // Limpar erros anteriores e resetar progresso
+    await prisma.$transaction([
+      prisma.erroImportacao.deleteMany({ where: { importacao_id: id } }),
+      prisma.importacao.update({
+        where: { id },
+        data: {
+          status: 'PROCESSANDO',
+          processados: 0,
+          erros: 0
+        }
+      })
+    ]);
+
+    await importQueue.add('process-import', {
+      importId: id,
+      filePath: importacao.file_path,
+    });
+
+    await this.addLog(id, 'Reprocessamento solicitado pelo usuário', 'INFO');
+    return { success: true };
   }
 
   async addLog(importId: string, mensagem: string, nivel: 'INFO' | 'WARNING' | 'ERROR') {
