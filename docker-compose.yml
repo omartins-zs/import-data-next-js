@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: import-data-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: import_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - import-data-network
+
+  redis:
+    image: redis:7
+    container_name: import-data-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - import-data-network
+
+  app:
+    build: .
+    container_name: import-data-app
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/import_data?schema=public"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PORT: 3001
+      NODE_ENV: production
+      NEXTAUTH_SECRET: 9261a8f94c483f8e5d36e7681146313b
+      NEXTAUTH_URL: http://localhost:3001
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - import-data-network
+
+networks:
+  import-data-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
