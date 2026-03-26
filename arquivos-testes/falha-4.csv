@@ -1,0 +1,3 @@
+nome,cpf,email,telefone
+Errado,000,email-invalido,abc
+Invalido,999,teste@,123
