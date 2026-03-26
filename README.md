@@ -1,157 +1,161 @@
 <div align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/8243/8243110.png" width="100" height="100" alt="Logo" />
+  
+  <h1>🚀 Sistema Inteligente de Importação de Dados</h1>
 
-# 📊 Import Data
-
-<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,prisma,postgres,redis,docker" />
-
-<h3 align="center">Sistema Inteligente de Importação e Gestão de Dados</h3>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js" />
-  <img src="https://img.shields.io/badge/React-19.2-blue?style=for-the-badge&logo=react" />
-  <img src="https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma" />
-  <img src="https://img.shields.io/badge/BullMQ-Queue-FF4438?style=for-the-badge&logo=redis" />
-  <img src="https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css" />
-</p>
-
-<cite>Plataforma SaaS de alta performance para importação assíncrona de grandes volumes de dados (CSV/XLSX) com monitoramento em tempo real.</cite>
-
-<h4 align="center"> ✅ Import Data 🚀 Concluído & Estável </h4>
-
+  <p align="center">
+    <img src="https://img.shields.io/badge/Next.js-16+-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+    <img src="https://img.shields.io/badge/TypeScript-5+-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Prisma-5+-2D3748?style=for-the-badge&logo=prisma" alt="Prisma" />
+    <img src="https://img.shields.io/badge/PostgreSQL-15+-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Redis-7+-DC382D?style=for-the-badge&logo=redis" alt="Redis" />
+    <img src="https://img.shields.io/badge/BullMQ-5+-FF4500?style=for-the-badge&logo=bull" alt="BullMQ" />
+  </p>
 </div>
 
 ---
 
-## 🏗️ Arquitetura do Projeto
+## 📝 DESCRIÇÃO
 
-- **Tipo:** 🧱 Monólito Moderno (Back-end e Front-end integrados via Next.js App Router).
-- **Estrutura:** Utiliza **API Routes** para serviços internos e **BullMQ** para processamento de tarefas pesadas em background, garantindo que o usuário nunca tenha a interface travada durante grandes importações.
-- **Padrões:** Clean Code, Repository Pattern, Singleton para conexões de banco e SOLID em serviços centrais.
+Solução SaaS robusta e escalável para importação massiva de dados em formatos **CSV** e **XLSX**. O sistema utiliza processamento assíncrono em background para garantir alta performance e resiliência, permitindo o acompanhamento do progresso em tempo real e a re-execução de falhas.
 
----
-
-## 🧠 Sobre o Projeto
-
-O **Import Data** foi desenvolvido para resolver o desafio de processar grandes listas de pessoas sem comprometer a usabilidade. Utilizando uma fila robusta com **Redis**, o sistema aceita os arquivos e delega o processamento para um **Worker** independente, permitindo que o usuário acompanhe o progresso linha a linha através de um dashboard intuitivo e responsivo.
+<cite>Plataforma moderna para gestão de fluxos de dados, com foco em observabilidade técnica e experiência do usuário (UX).</cite>
 
 ---
 
-## 🔥 Pré-requisitos
+## 🚦 STATUS DO PROJETO
 
-Para rodar o projeto localmente ou em produção, você precisará de:
-
-- **Node.js** 20.x ou superior (LTS recomendada)
-- **Docker** & **Docker Compose**
-- **PostgreSQL** 15+ (incluso no Docker)
-- **Redis** 7.x (incluso no Docker)
+<h4 align="center"> ✅ Sistema de Importação 🚀 Concluído e Estável ⚙️ </h4>
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🏗️ ARQUITETURA DO PROJETO
 
-- **Linguagem:** [TypeScript 5.x](https://www.typescriptlang.org/)
-- **Framework Web:** [Next.js 16.x (App Router)](https://nextjs.org/)
-- **Banco de Dados:** [PostgreSQL 15](https://www.postgresql.org/)
-- **ORM:** [Prisma 5.22.0](https://www.prisma.io/)
-- **Mensageria/Fila:** [BullMQ](https://docs.bullmq.io/) + [Redis 7](https://redis.io/)
-- **Estilização:** [Tailwind CSS 4.x](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
-- **Validação:** [Zod](https://zod.dev/)
-- **Logger:** [Pino](https://github.com/pinojs/pino)
+- **Tipo**: 🧱 **Monólito Moderno** (Backend + Frontend integrados via Next.js App Router)
+- **Motor de Jobs**: Utiliza o padrão **Worker/Queue**, onde o Next.js gerencia as rotas e o dashboard, enquanto um processo independente (Worker) consome as filas do Redis via BullMQ para processar os arquivos pesados sem travar a interface.
 
 ---
 
-## 🔨 Funcionalidades Reais
+## 🔥 PRÉ-REQUISITOS
 
-- [x] **Dashboard de Operações:** Visão geral com estatísticas de pessoas, registros e erros encontrados.
-- [x] **Monitoramento de Saúde:** Painel de status em tempo real da API, Banco de Dados, Redis e Worker.
-- [x] **Importação Assíncrona:** Upload de arquivos CSV e XLSX com validação rigorosa de campos (CPF, Email, Telefone).
-- [x] **Gestão de Pessoas:** CRUD completo para gerenciar todos os registros importados.
-- [x] **Controle de Acessos:** Gestão de usuários administradores com suporte a login seguro e sessão via JWT/NextAuth.
-- [x] **Logs Detalhados:** Histórico completo de cada importação, com logs de erro específicos por linha de arquivo.
-- [x] **Modo Escuro/Claro:** Interface totalmente adaptável com suporte a Glassmorphism e animações modernas.
+Para rodar este projeto, você precisará das seguintes versões ou superiores:
 
----
-
-## 📸 Preview do Projeto
-
-🚧 Preview em vídeo/GIF não disponível no repositório.
+- **Node.js 20+**
+- **Docker** (recomendado para Postgres/Redis) ou instalações locais compatíveis
+- **PostgreSQL 15+**
+- **Redis 7+**
 
 ---
 
-## 📊 Documentação da API
+## 🚀 TECNOLOGIAS UTILIZADAS
 
-🚧 O projeto não possui documentação automatizada (Swagger) no momento. Os endpoints principais estão localizados em:
+O projeto foi construído com ferramentas de última geração:
 
-- `/api/auth/login` - Autenticação
-- `/api/importacoes` - Gestão de arquivos
-- `/api/pessoas` - Gestão de registros
-- `/api/usuarios` - Gestão de admins
-- `/api/health` - Health Check do sistema
+- **Frontend/Backend**: [Next.js 16](https://nextjs.org/) (App Router & Server Actions)
+- **Linguagem**: [TypeScript 5.x](https://www.typescriptlang.org/)
+- **Estilização**: [Tailwind CSS 4.x](https://tailwindcss.com/)
+- **ORM**: [Prisma 5.x](https://www.prisma.io/)
+- **Filas/Worker**: [BullMQ 5.x](https://docs.bullmq.io/)
+- **Cache/Fila**: [Redis 7+](https://redis.io/)
+- **Banco de Dados**: [PostgreSQL](https://www.postgresql.org/)
+- **UI & Feedback**: [Lucide-React](https://lucide.dev/), [SweetAlert2](https://sweetalert2.github.io/), [Date-fns](https://date-fns.org/)
+- **Validação**: [Zod](https://zod.dev/)
 
 ---
 
-## 💻 Comandos para Execução
+## 🔨 FUNCIONALIDADES REAIS
 
-### 🐳 Via Docker (Recomendado)
+- **📤 Upload Inteligente**: Suporte a arquivos `.csv` e `.xlsx`.
+- **⚙️ Processamento em Background**: Jobs assíncronos que não bloqueiam a navegação.
+- **🚥 Sistema de 4 Estados**: Classificação automática de importações em:
+  - 🟢 **SUCESSO**: 100% dos dados importados.
+  - 🟡 **FALHA**: Arquivo lido, mas 100% dos registros inválidos.
+  - 🔵 **SUCESSO PARCIAL**: Parte dos dados importados com divergências registradas.
+  - 🔴 **ERRO**: Falha crítica no formato ou processamento do motor.
+- **🔄 Recuperação de Falhas (Retry)**: Botão para re-processar arquivos que falharam anteriormente.
+- **📊 Dashboard de Saúde**: Monitoramento em tempo real do status da API, Banco, Redis e Worker.
+- **📝 Logs de Barramento**: Telemetria detalhada de cada passo da importação exibida no painel.
 
+---
+
+## 🎯 SOBRE O PROJETO
+
+O **Sistema de Importação de Dados** foi desenvolvido demonstrando as melhores práticas do ecossistema Next.js, utilizando Arquitetura Modular no diretório `modules/`, Inversão de Dependência via Repositories e processamento distribuído com Workers. Focado em escalabilidade, o sistema suporta grandes volumes de dados mantendo a interface leve e informativa.
+
+---
+
+## 📸 PREVIEW DO PROJETO
+
+🚧 Preview não disponível no projeto. (Imagens podem ser adicionadas na pasta `docs/screenshots`).
+
+---
+
+## 📊 DOCUMENTAÇÃO
+
+### 📁 Documentação do Projeto
+- **`arquivos-testes/`**: Pasta contendo 20 arquivos prontos (5 de cada status) para validar o sistema imediatamente.
+- **`prisma/schema.prisma`**: Documentação do modelo de dados e enums de status.
+
+### 📬 Postman / Collections
+🚧 O projeto não possui collections automatizadas exportadas no momento.
+
+### 🌐 Swagger
+🚧 Documentação via interface Swagger não configurada (A aplicação utiliza API Routes do Next.js).
+
+---
+
+## 💻 COMANDOS
+
+### 1. Clonar e Instalar
 ```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/import-data-next-js.git
-
-# Entre na pasta
-cd import-data-next-js
-
-# Configure as variáveis de ambiente
-cp .env.example .env
-
-# Suba todo o ambiente (API + DB + Redis + Worker)
-docker-compose up --build -d
+npm install
 ```
 
-### 🛠️ Desenvolvimento Local (Hot Reload)
-
+### 2. Configurar Variáveis de Ambiente
+Copie o arquivo `.env.example` para `.env` e configure suas credenciais de Banco e Redis.
 ```bash
-# 1. Instale as dependências
-npm install
+cp .env.example .env
+```
 
-# 2. Suba apenas o banco e o redis (Docker necessário para infra)
-docker-compose up -d postgres redis
+### 3. Sincronizar Banco de Dados
+```bash
+npx prisma db push
+```
 
-# 3. Rode as migrações do banco
-npx prisma migrate dev
-
-# 4. Inicie o servidor Next.js
+### 4. Rodar a Aplicação (Dashboard + API)
+```bash
 npm run dev
+```
 
-# 5. Em outro terminal, inicie o Worker de processamento
+### 5. Rodar o Worker de Processamento (Obrigatório para importação)
+```bash
 npm run worker
 ```
 
-> ⚠️ Estes são comandos básicos. Verifique o arquivo [COMO_EXECUTAR.md](./COMO_EXECUTAR.md) para instruções detalhadas de configuração.
+> ⚠️ Estes são comandos básicos. Verifique arquivos como `package.json` ou as variáveis de ambiente em `.env` para configurações específicas de porta e host.
 
 ---
 
-## 🧱 Estrutura de Pastas Principais
+## 🧱 ESTRUTURA DO PROJETO
 
-```text
-├── app/              # Rotas, Páginas e API do Next.js
-├── components/       # Componentes React (UI/Layout)
-├── lib/              # Configurações de clientes (Prisma, Redis, Logger)
-├── modules/          # Lógica de Negócio (Serviços e Repositórios)
-├── prisma/           # Esquema do Banco e Migrações
-├── workers/          # Implementação dos Workers BullMQ
-├── arquivos-testes/  # Massa de dados para validação (CSV/XLSX)
-└── public/           # Ativos estáticos (imagens/ícones)
+```txt
+├── app/                  # Rotas Next.js, API e Frontend
+├── modules/              # Lógica de Negócios (Padrão Modular)
+│   ├── importacao/       # Services, Processors e Controllers de Import
+│   └── pessoas/          # Repositories e Entidades de Dados
+├── workers/              # Executável do Job Processor
+├── prisma/               # Schema e Migrações do Banco
+├── uploads/              # Armazenamento temporário de arquivos
+└── arquivos-testes/      # Massa de dados para validação
 ```
 
 ---
 
-## 📝 Melhorias Futuras
-
-- [ ] Implementar exportação de relatórios de erro em PDF/XLSX.
-- [ ] Adicionar suporte a múltiplos idiomas (i18n).
-- [ ] Integrar monitoramento externo via Sentry ou Prometheus.
-- [ ] Adicionar testes unitários e de integração com Vitest/Playwright.
+## 📝 MELHORIAS FUTURAS
+- [ ] Implementar autenticação via Next-Auth (preparado).
+- [ ] Adicionar suporte a arquivos Google Sheets via API.
+- [ ] Exportação de relatórios de divergências em PDF.
+- [ ] Sistema de notificações via WebSocket (Pusher/Socket.io).
 
 ---
 
