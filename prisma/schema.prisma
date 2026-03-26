@@ -27,6 +27,7 @@ model Pessoa {
 model Importacao {
   id              String           @id @default(uuid())
   nome_arquivo    String
+  file_path       String?          // Caminho físico do arquivo para reprocessamento
   status          ImportStatus     @default(PENDENTE)
   total_registros Int              @default(0)
   processados     Int              @default(0)
@@ -84,7 +85,8 @@ enum Status {
 enum ImportStatus {
   PENDENTE
   PROCESSANDO
-  CONCLUIDO
+  SUCESSO
+  SUCESSO_PARCIAL
+  FALHA
   ERRO
-  CONCLUIDO_COM_ERROS
 }
