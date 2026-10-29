@@ -1,13 +1,13 @@
-{
+﻿{
   "name": "import-data-next-js",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "echo '🚀 A aplicação está rodando na porta 3001... 📡 Acesse em: http://localhost:3001' && next dev -p 3001",
+    "dev": "echo 'ðŸš€ A aplicaÃ§Ã£o estÃ¡ rodando na porta 3001... ðŸ“¡ Acesse em: http://localhost:3001' && next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "eslint",
-    "worker": "echo '🚀 O Worker está online e aguardando novos trabalhos...' && tsx workers/import.worker.ts",
+    "worker": "echo 'ðŸš€ O Worker estÃ¡ online e aguardando novos trabalhos...' && tsx workers/import.worker.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"
@@ -44,5 +44,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   }
 }
